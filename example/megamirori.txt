@@ -1,0 +1,9 @@
+s[hide]1970~2100
+r((riko))1971~
+ne<neko>
+na(nach)
+ku(kuru)
+may/めいちゃん/
+ko(こまちゃん)
+s-r
+s-r:ne,na,ku,may,ko

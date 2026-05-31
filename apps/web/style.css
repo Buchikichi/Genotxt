@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+textarea {
+  width: 100%;
+  min-height: 5em;
+  resize: vertical;
+}
+#viewArea {
+  min-height: 100px;
+  height: auto;
+  border: 1px solid black;
+  background-color: rgb(250, 250, 250);
+}
+#viewArea svg {
+  width: 100%;
+  height: auto;
+}
