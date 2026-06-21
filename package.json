@@ -19,11 +19,14 @@
   },
   "homepage": "https://github.com/Buchikichi/Genotxt#readme",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.5.0",
     "npm-run-all": "^4.1.5"
   },
   "scripts": {
     "dev:@Genotxt/GenotxtJS": "esbuild packages/genotxt/src/index.js --bundle --outfile=packages/genotxt/dist/index.js --format=esm --watch",
     "dev:@Genotxt/web": "vite apps/web",
-    "dev": "run-p dev:*"
+    "dev": "run-p dev:*",
+    "lint": "eslint ."
   }
 }
