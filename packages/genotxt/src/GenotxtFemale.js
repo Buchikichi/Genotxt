@@ -1,8 +1,8 @@
-import { GenotxtMark } from './GenotxtMark.js';
+import { GenotxtNode } from './GenotxtNode.js';
 import { GenotxtPair } from './GenotxtPair.js';
 import * as Param from './param.js';
 
-export class GenotxtFemale extends GenotxtMark {
+export class GenotxtFemale extends GenotxtNode {
   constructor(doc, info) {
     super(doc, info);
     this.gender = 'f';

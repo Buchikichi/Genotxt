@@ -1,8 +1,8 @@
-import { GenotxtMarkFactory } from './GenotxtMarkFactory.js';
+import { GenotxtNodeFactory } from './GenotxtNodeFactory.js';
 import * as Param from './param.js';
 
 export class Genotxt {
-  static regexMark = /^([0-9]+|[a-z0-9]+)([\[\(</]{1,2})(.+?)([\]\)>/]{1,2})(\d{4})?\~?(\d{4})?$/;
+  static regexNode = /^([0-9]+|[a-z0-9]+)([\[\(</]{1,2})(.+?)([\]\)>/]{1,2})(\d{4})?\~?(\d{4})?$/;
   static regexRel = /^([a-z0-9]+)-([a-z0-9]+)(?:\:([a-z,]+))?$/;
 
   constructor(doc) {
@@ -10,11 +10,11 @@ export class Genotxt {
     this.ids = new Map();
   }
 
-  getMark(id, type = '<') {
+  getNode(id, type = '<') {
     if (this.ids.has(id)) {
       return this.ids.get(id);
     }
-    const instance = GenotxtMarkFactory.newInstance(this.doc, {
+    const instance = GenotxtNodeFactory.newInstance(this.doc, {
       id: id,
       type: type,
       name: id,
@@ -39,8 +39,8 @@ export class Genotxt {
     }
   }
 
-  addMark(info) {
-    const instance = GenotxtMarkFactory.newInstance(this.doc, info);
+  addNode(info) {
+    const instance = GenotxtNodeFactory.newInstance(this.doc, info);
 
     this.addId(instance);
     return instance;
@@ -48,8 +48,8 @@ export class Genotxt {
 
   addRel(info) {
     // console.log(info);
-    const instance1 = this.getMark(info.id1, '[');
-    const instance2 = this.getMark(info.id2, '(');
+    const instance1 = this.getNode(info.id1, '[');
+    const instance2 = this.getNode(info.id2, '(');
     const { gender: g1 } = instance1;
     const { gender: g2 } = instance2;
 
@@ -58,7 +58,7 @@ export class Genotxt {
       instance2.partnerWith(instance1);
       if (info.children) {
         const children = info.children.split(',')
-          .map(id => this.getMark(id.trim()))
+          .map(id => this.getNode(id.trim()))
           .filter(c => !c.parents);
 
         instance1.addChildren(instance2, children);
@@ -73,13 +73,13 @@ export class Genotxt {
     let psudoX = Param.GRID_WIDTH;
 
     lines.forEach(l => {
-      const matchMark = Genotxt.regexMark.exec(l);
+      const matchNode = Genotxt.regexNode.exec(l);
       const matchRel = Genotxt.regexRel.exec(l);
 
-      if (matchMark) {
-        const [, id, type, name, close, begin, end] = matchMark;
+      if (matchNode) {
+        const [, id, type, name, close, begin, end] = matchNode;
 
-        this.addMark({
+        this.addNode({
           x: psudoX,
           id: id,
           type: type,

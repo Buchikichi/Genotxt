@@ -1,7 +1,7 @@
-import { GenotxtMark } from './GenotxtMark.js';
+import { GenotxtNode } from './GenotxtNode.js';
 import * as Param from './param.js';
 
-export class GenotxtOther extends GenotxtMark {
+export class GenotxtOther extends GenotxtNode {
   constructor(doc, info) {
     super(doc, info);
   }

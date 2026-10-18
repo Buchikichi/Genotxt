@@ -3,7 +3,7 @@ import { GenotxtFemale } from './GenotxtFemale.js';
 import { GenotxtFetus } from './GenotxtFetus.js';
 import { GenotxtOther } from './GenotxtOther.js';
 
-export class GenotxtMarkFactory {
+export class GenotxtNodeFactory {
   static newInstance(doc, info) {
     let instance;
     // console.log(info);

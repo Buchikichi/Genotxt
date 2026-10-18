@@ -1,6 +1,6 @@
 import * as Param from './param.js';
 
-export class GenotxtMark {
+export class GenotxtNode {
   constructor(doc, info) {
     this.width = Param.GRID_WIDTH;
     this.height = Param.GRID_WIDTH;
