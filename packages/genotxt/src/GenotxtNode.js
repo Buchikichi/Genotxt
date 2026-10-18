@@ -69,25 +69,9 @@ export class GenotxtNode {
     return group;
   }
 
-  updateGeneration(generation = null, sourceId = null) {
-    if (sourceId == this.id) {
-      return;
-    }
-    if (sourceId == null) {
-      sourceId = this.id;
-    }
-    // console.log(`updateGeneration: ${this.id}:${generation}`);
-    if (generation && generation != this.generation) {
-      this.generation = generation;
-    }
-    if (this.parents && this.generation <= this.parents.generation) {
-      const parent = this.generation;
-
-      this.generation++;
-      console.log(`parents: ${this.id}:${parent}`);
-      this.parents.updateGeneration(parent, sourceId);
-    }
-    this.partners.forEach(p => p.updateDescendantsGeneration(this.generation, sourceId))
+  updateGeneration(generation = 0) {
+    this.generation = generation;
+    this.partners.forEach(p => p.updateGeneration(generation));
   }
 
   updatePos(pos = null, sourceId = null) {

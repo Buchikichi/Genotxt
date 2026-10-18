@@ -19,20 +19,7 @@ export class GenotxtPair {
     });
   }
 
-  updateGeneration(generation, sourceId) {
-    console.log(`sourceId: ${sourceId}`);
-    if (this.male.id != sourceId) {
-      console.log(`male: ${this.male.id}:${generation}`);
-      this.male.updateGeneration(generation, sourceId);
-    }
-    if (this.female.id != sourceId) {
-      console.log(`female: ${this.female.id}:${generation}`);
-      this.female.updateGeneration(generation, sourceId);
-    }
-  }
-
-  updateDescendantsGeneration(generation, sourceId) {
-    this.children.filter(c => c.id != sourceId)
-      .forEach(c => c.updateGeneration(generation + 1, sourceId));
+  updateGeneration(generation) {
+    this.children.forEach(c => c.updateGeneration(generation + 1));
   }
 }

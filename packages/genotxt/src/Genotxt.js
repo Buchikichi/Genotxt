@@ -68,6 +68,23 @@ export class Genotxt {
     }
   }
 
+  getRoot() {
+    const roots = [...this.ids.values()].filter(n => !n.parents && n.gender === 'f');
+
+    if (1 < roots.length) {
+      console.warn(`There are ${roots.length} roots.`);
+      return null;
+    }
+    return roots[0];
+  }
+
+  updateGeneration() {
+    const root = this.getRoot();
+
+    // console.log(`Root: ${root ? root.info.name : 'null'}`);
+    root.updateGeneration();
+  }
+
   generateActors(text) {
     const lines = text.split(/\r?\n/).filter(l => l).map(l => l.trim());
     let psudoX = Param.GRID_WIDTH;
@@ -99,10 +116,11 @@ export class Genotxt {
         });
       }
     });
-    for (const actor of this.ids.values()) {
-      actor.updateGeneration();
-      actor.updatePos();
-    }
+    this.updateGeneration();
+    // for (const actor of this.ids.values()) {
+    //   actor.updateGeneration();
+    //   actor.updatePos();
+    // }
   }
 
   fillSvg(svg) {
