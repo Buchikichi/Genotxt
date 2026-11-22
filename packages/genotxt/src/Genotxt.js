@@ -3,7 +3,7 @@ import * as Param from './param.js';
 
 export class Genotxt {
   static regexNode = /^([0-9]+|[a-z0-9]+)([\[\(</]{1,2})(.+?)([\]\)>/]{1,2})(\d{4})?\~?(\d{4})?$/;
-  static regexRel = /^([a-z0-9]+)-([a-z0-9]+)(?:\:([a-z,]+))?$/;
+  static regexRel = /^([a-z0-9]+)_([a-z0-9]+)(?:\:([a-z,]+))?$/;
 
   constructor(doc) {
     this.doc = doc;
@@ -50,18 +50,18 @@ export class Genotxt {
     // console.log(info);
     const instance1 = this.getNode(info.id1, '[');
     const instance2 = this.getNode(info.id2, '(');
-    const { gender: g1 } = instance1;
-    const { gender: g2 } = instance2;
+    const [male, female] = 'm' == instance1.gender ? [instance1, instance2] : [instance2, instance1];
 
-    if ('m' == g1 && 'f' == g2 || 'm' == g2 && 'f' == g1) {
-      instance1.partnerWith(instance2);
-      instance2.partnerWith(instance1);
+    // console.log(`rel: ${male.id}_${female.id}`);
+    if ('m' == male.gender && 'f' == female.gender) {
       if (info.children) {
         const children = info.children.split(',')
           .map(id => this.getNode(id.trim()))
           .filter(c => !c.parents);
 
-        instance1.addChildren(instance2, children);
+        female.partnerWith(male, children);
+      } else {
+        female.partnerWith(male);
       }
     } else {
       // ToDo: error
@@ -83,6 +83,10 @@ export class Genotxt {
 
     // console.log(`Root: ${root ? root.info.name : 'null'}`);
     root.updateGeneration();
+
+    const maxNode = [...this.ids.values()].reduce((max, n) => max.generation < n.generation ? n : max, root);
+
+    return maxNode.generation;
   }
 
   generateActors(text) {
@@ -90,6 +94,9 @@ export class Genotxt {
     let psudoX = Param.GRID_WIDTH;
 
     lines.forEach(l => {
+      if (l.startsWith('#')) {
+        return;
+      }
       const matchNode = Genotxt.regexNode.exec(l);
       const matchRel = Genotxt.regexRel.exec(l);
 
@@ -98,25 +105,26 @@ export class Genotxt {
 
         this.addNode({
           x: psudoX,
-          id: id,
-          type: type,
-          name: name,
-          close: close,
-          begin: begin,
-          end: end,
+          id,
+          type,
+          name,
+          close,
+          begin,
+          end,
         });
         psudoX += 200;
       } else if (matchRel) {
         const [, id1, id2, children] = matchRel;
 
         this.addRel({
-          id1: id1,
-          id2: id2,
-          children: children,
+          id1,
+          id2,
+          children,
         });
       }
     });
-    this.updateGeneration();
+    const maxGeneration = this.updateGeneration();
+    console.log(`Generation: ${maxGeneration + 1}`);
     // for (const actor of this.ids.values()) {
     //   actor.updateGeneration();
     //   actor.updatePos();

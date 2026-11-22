@@ -23,16 +23,4 @@ export class GenotxtMale extends GenotxtNode {
     this.createText(group);
     return group;
   }
-
-  partnerWith(her) {
-    const exists = this.partners.some(p => p.female.id == her.id);
-
-    if (!exists) {
-      this.partners.push(new GenotxtPair(this, her));
-    }
-  }
-
-  addChildren(her, children) {
-    her.addChildren(this, children);
-  }
 }

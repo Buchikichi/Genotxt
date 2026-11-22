@@ -50,18 +50,15 @@ export class GenotxtFemale extends GenotxtNode {
     return group;
   }
 
-  partnerWith(him) {
-    const exists = this.partners.some(p => p.male.id == him.id);
+  partnerWith(him, children = []) {
+    const exists = this.partners.find(p => p.male.id === him.id);
 
-    if (!exists) {
-      this.partners.push(new GenotxtPair(him, this));
+    if (exists) {
+      exists.addChildren(children);
     }
-  }
+    const pair = new GenotxtPair(him, this);
 
-  addChildren(him, children) {
-    const pair = this.partners.find(p => p.male.id == him.id);
-
-    // It definitely exists.
-    pair.addChildren(children);
+    this.partners.push(pair);
+    pair.addChildren(children)
   }
 }

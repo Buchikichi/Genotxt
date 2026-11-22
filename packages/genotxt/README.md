@@ -23,12 +23,12 @@ The type of brackets determines the gender or status:
 ### Relations
 To represent a union or relationship:
 
-`id1-id2`
+`id1_id2`
 
 ### Children
 To represent offspring resulting from a union:
 
-`id1-id2:id3,id4,id5`
+`id1_id2:id3,id4,id5`
 
 ## Roadmap / Future Plans
 - [ ] Support for dates of birth and death.

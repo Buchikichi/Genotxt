@@ -20,6 +20,8 @@ export class GenotxtPair {
   }
 
   updateGeneration(generation) {
+    this.male.generation = generation;
+    this.female.generation = generation;
     this.children.forEach(c => c.updateGeneration(generation + 1));
   }
 }
