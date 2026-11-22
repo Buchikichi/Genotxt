@@ -19,9 +19,18 @@ export class GenotxtPair {
     });
   }
 
+  hasParents() {
+    return this.male.parents !== null || this.female.parents !== null;
+  }
+
   updateGeneration(generation) {
-    this.male.generation = generation;
-    this.female.generation = generation;
-    this.children.forEach(c => c.updateGeneration(generation + 1));
+    if (this.male.generation === null) {
+      this.male.updateGeneration(generation);
+      this.children.forEach(c => c.updateGeneration(generation + 1));
+    }
+    if (this.female.generation === null) {
+      this.female.updateGeneration(generation);
+      this.children.forEach(c => c.updateGeneration(generation + 1));
+    }
   }
 }

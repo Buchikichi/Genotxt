@@ -69,13 +69,16 @@ export class Genotxt {
   }
 
   getRoot() {
-    const roots = [...this.ids.values()].filter(n => !n.parents && n.gender === 'f');
+    const roots = [...this.ids.values()].filter(n => !n.hasParents());
+    const male = roots.filter(n => 'm' == n.gender);
+    const female = roots.filter(n => 'f' == n.gender);
 
-    if (1 < roots.length) {
-      console.warn(`There are ${roots.length} roots.`);
+    if (1 < male.length && 1 < female.length) {
+      console.warn(`There are male ${male} roots.`);
+      console.warn(`There are female ${female} roots.`);
       return null;
     }
-    return roots[0];
+    return male[0];
   }
 
   updateGeneration() {

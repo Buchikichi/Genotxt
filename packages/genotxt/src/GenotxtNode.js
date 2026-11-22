@@ -8,13 +8,17 @@ export class GenotxtNode {
     this.doc = doc;
     this.info = info;
     this.id = info.id;
-    this.generation = 0; // 0-based
+    this.generation = null; // 0-based
     this.parents = null;
     this.partners = [];
   }
 
   get y() {
     return Param.GRID_WIDTH + this.generation * Param.GRID_WIDTH * 2
+  }
+
+  hasParents() {
+    return this.parents !== null || this.partners.some(p => p.hasParents());
   }
 
   createGroup() {
@@ -75,5 +79,9 @@ export class GenotxtNode {
   }
 
   updatePos(pos = null, sourceId = null) {
+  }
+
+  toString() {
+    return `${this.id}(${this.info.name})`;
   }
 }
