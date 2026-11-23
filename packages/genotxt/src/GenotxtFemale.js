@@ -61,5 +61,7 @@ export class GenotxtFemale extends GenotxtNode {
     pair.addChildren(children)
     this.partners.push(pair);
     him.partners.push(pair);
+    this.parnerNumber = him.partners.length;
+    him.parnerNumber = this.partners.length;
   }
 }

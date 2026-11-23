@@ -1,10 +1,12 @@
 # A very famous family in Japan
-n[na]
-f(fu)
-s(saz)
-k[kat]
-w(wak)
-m[mas]
-t[tar]
+f(ふね)
+x[ほげ]
+n[なみ]
+s(さざ)
+k[かつ]
+w(わか)
+m[マス]
+t[たら]
 s_m:t
 n_f:s,k,w
+x_f

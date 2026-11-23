@@ -69,7 +69,7 @@ export class Genotxt {
   }
 
   getRoot() {
-    const roots = [...this.ids.values()].filter(n => !n.hasParents());
+    const roots = [...this.ids.values()].filter(n => (n.getParents() === null)).toSorted((a, b) => a.parnerNumber - b.parnerNumber);
     const male = roots.filter(n => 'm' == n.gender);
     const female = roots.filter(n => 'f' == n.gender);
 
@@ -78,23 +78,32 @@ export class Genotxt {
       console.warn(`There are female ${female} roots.`);
       return null;
     }
-    return male[0];
+    return male.length ==1 ? male[0] : female[0];
   }
 
   updateGeneration() {
     const root = this.getRoot();
 
-    // console.log(`Root: ${root ? root.info.name : 'null'}`);
+    if (root === null) {
+      console.warn('No root node found.');
+      return;
+    }
+    console.log(`Root: ${root}`);
     root.updateGeneration();
+    root.updateOrder();
 
-    const maxNode = [...this.ids.values()].reduce((max, n) => max.generation < n.generation ? n : max, root);
+    const generation = [...this.ids.values()].reduce((max, n) => max.generation < n.generation ? n : max, root).generation;
 
-    return maxNode.generation;
+    console.log(`Generation: ${generation + 1}`);
+    for (var g = 0; g <= generation; g++) {
+      const nodes = [...this.ids.values()].filter(n => n.generation === g).toSorted((a, b) => a.getPath().localeCompare(b.getPath()));
+
+      nodes.forEach((n, ix) => n.x = ix * 2);
+    }
   }
 
   generateActors(text) {
     const lines = text.split(/\r?\n/).filter(l => l).map(l => l.trim());
-    let psudoX = Param.GRID_WIDTH;
 
     lines.forEach(l => {
       if (l.startsWith('#')) {
@@ -107,7 +116,6 @@ export class Genotxt {
         const [, id, type, name, close, begin, end] = matchNode;
 
         this.addNode({
-          x: psudoX,
           id,
           type,
           name,
@@ -115,7 +123,6 @@ export class Genotxt {
           begin,
           end,
         });
-        psudoX += 200;
       } else if (matchRel) {
         const [, id1, id2, children] = matchRel;
 
@@ -126,12 +133,7 @@ export class Genotxt {
         });
       }
     });
-    const maxGeneration = this.updateGeneration();
-    console.log(`Generation: ${maxGeneration + 1}`);
-    // for (const actor of this.ids.values()) {
-    //   actor.updateGeneration();
-    //   actor.updatePos();
-    // }
+    this.updateGeneration();
   }
 
   fillSvg(svg) {

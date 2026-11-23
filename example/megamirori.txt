@@ -5,5 +5,5 @@ na(nach)
 ku(kuru)
 may/めいちゃん/
 ko(こまちゃん)
-s-r
-s-r:ne,na,ku,may,ko
+s_r
+s_r:ne,na,ku,may,ko

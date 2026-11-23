@@ -1,5 +1,4 @@
 import { GenotxtNode } from './GenotxtNode.js';
-import { GenotxtPair } from './GenotxtPair.js';
 import * as Param from './param.js';
 
 export class GenotxtMale extends GenotxtNode {

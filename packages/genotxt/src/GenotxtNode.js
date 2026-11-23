@@ -11,20 +11,30 @@ export class GenotxtNode {
     this.generation = null; // 0-based
     this.parents = null;
     this.partners = [];
+    this.parnerNumber = null;
+    this.order = null;
   }
 
   get y() {
     return Param.GRID_WIDTH + this.generation * Param.GRID_WIDTH * 2
   }
 
-  hasParents() {
-    return this.parents !== null || this.partners.some(p => p.hasParents());
+  getParents() {
+    return this.parents ?? this.partners.find(p => p.getParents() !== null)?.getParents() ?? null;
+  }
+
+  getPath() {
+    const parents = this.getParents()?.getPath() ?? '';
+    const order = `${100 + this.order}`.slice(1);
+
+    return `${parents}/${order}`;
   }
 
   createGroup() {
     const group = this.doc.createElementNS(Param.SVG_NS, 'g');
+    const x = Param.GRID_WIDTH + this.x * Param.GRID_WIDTH;
 
-    group.setAttribute('transform', `translate(${this.info.x}, ${this.y})`);
+    group.setAttribute('transform', `translate(${x}, ${this.y})`);
     return group;
   }
 
@@ -44,7 +54,7 @@ export class GenotxtNode {
     if (this.info.name) {
       const text = this.doc.createElementNS(Param.SVG_NS, 'text');
 
-      text.textContent = this.info.name;
+      text.textContent = this.info.name + `  (${this.getPath()})`;
       text.setAttribute('x', 0);
       text.setAttribute('y', 50 + 20);
       text.setAttribute('font-size', Param.FONT_SIZE);
@@ -76,6 +86,11 @@ export class GenotxtNode {
   updateGeneration(generation = 0) {
     this.generation = generation;
     this.partners.forEach(p => p.updateGeneration(generation));
+  }
+
+  updateOrder(order = 10) {
+    this.order = order;
+    this.partners.forEach(p => p.updateOrder(order));
   }
 
   updatePos(pos = null, sourceId = null) {
