@@ -78,7 +78,7 @@ export class Genotxt {
       console.warn(`There are female ${female} roots.`);
       return null;
     }
-    return male.length ==1 ? male[0] : female[0];
+    return male.length == 1 ? male[0] : female[0];
   }
 
   updateGeneration() {
@@ -138,7 +138,8 @@ export class Genotxt {
 
   fillSvg(svg) {
     const relations = this.ids.values()
-      .map(a => a.createRelationships())
+      .filter(n => 'f' == n.gender)
+      .flatMap(f => f.createRelationships())
       .filter(g => g);
 
     for (const rel of relations) {

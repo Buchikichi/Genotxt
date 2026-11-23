@@ -5,8 +5,9 @@ n[なみ]
 s(さざ)
 k[かつ]
 w(わか)
+tm/たま/
 m[マス]
 t[たら]
 s_m:t
-n_f:s,k,w
+n_f:s,k,w,tm
 x_f

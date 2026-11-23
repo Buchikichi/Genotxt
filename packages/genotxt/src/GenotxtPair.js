@@ -1,3 +1,5 @@
+import * as Param from './param.js';
+
 export class GenotxtPair {
   constructor(male, female) {
     this.male = male;
@@ -58,6 +60,46 @@ export class GenotxtPair {
       this.order = newOrder - 1;
     }
     this.children.forEach((c, ix) => c.updateOrder((ix + 1) * 10));
+  }
+
+  createRelationships() {
+    const group = this.female.createGroup();
+    const path = this.female.doc.createElementNS(Param.SVG_NS, 'path');
+    const d = [];
+    const y = this.female.radius;
+    const v = Param.GRID_HALF / 2;
+    const h = (this.male.x - this.female.x) * Param.GRID_WIDTH;
+
+    d.push(`M 0 ${y}`);
+    d.push(`v ${v}`);
+    d.push(`h ${h}`);
+    d.push(`v ${-v}`);
+    if (1 < this.children.length) {
+      const first = this.children[0];
+      const last = this.children[this.children.length - 1];
+      const x1 = (first.x - this.female.x) * Param.GRID_WIDTH;
+      const y1 = this.female.radius + Param.GRID_WIDTH - Param.GRID_HALF / 2;
+      const h1 = (last.x - first.x) * Param.GRID_WIDTH;
+      const h2 = -h1 / 2;
+
+      d.push(`M ${x1} ${y1}`);
+      d.push(`h ${h1}`);
+      d.push(`m ${h2} 0`);
+      d.push(`v ${-v}`);
+    }
+    this.children.forEach(c => {
+      const cx = (c.x - this.female.x) * Param.GRID_WIDTH;
+      const cy = this.female.radius + Param.GRID_WIDTH - Param.GRID_HALF / 2;
+
+      d.push(`M ${cx} ${cy}`);
+      d.push(`v ${v}`);
+    });
+    path.setAttribute('d', d.join(' '));
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'lightgrey')
+    path.setAttribute('stroke-width', Param.STROKE_WIDTH);
+    group.appendChild(path);
+    return group;
   }
 
   toString() {

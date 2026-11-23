@@ -54,7 +54,8 @@ export class GenotxtNode {
     if (this.info.name) {
       const text = this.doc.createElementNS(Param.SVG_NS, 'text');
 
-      text.textContent = this.info.name + `  (${this.getPath()})`;
+      text.textContent = this.info.name;
+      // text.textContent = this.info.name + `  (${this.getPath()})`;
       text.setAttribute('x', 0);
       text.setAttribute('y', 50 + 20);
       text.setAttribute('font-size', Param.FONT_SIZE);
@@ -65,22 +66,7 @@ export class GenotxtNode {
   }
 
   createRelationships() {
-    if (!this.parents) {
-      return null;
-    }
-    const group = this.createGroup();
-    const path = this.doc.createElementNS(Param.SVG_NS, 'path');
-    const d = [];
-    const y = -this.radius;
-    const v = -this.radius / 2;
-    d.push(`M 0 ${y}`);
-    d.push(`v ${v}`);
-    path.setAttribute('d', d.join(' '));
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'black')
-    path.setAttribute('stroke-width', Param.STROKE_WIDTH);
-    group.appendChild(path);
-    return group;
+    return this.partners.map(p => p.createRelationships());
   }
 
   updateGeneration(generation = 0) {
