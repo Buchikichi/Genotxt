@@ -22,3 +22,9 @@ textarea {
   width: 100%;
   height: auto;
 }
+path.relationship {
+  stroke: lightgrey;
+}
+path.relationship:hover {
+  stroke: blue;
+}

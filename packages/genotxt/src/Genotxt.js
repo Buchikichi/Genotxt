@@ -88,18 +88,47 @@ export class Genotxt {
       console.warn('No root node found.');
       return;
     }
-    console.log(`Root: ${root}`);
+    // console.log(`Root: ${root}`);
     root.updateGeneration();
     root.updateOrder();
+  }
 
+  shiftPosition(target, diffX) {
+    const nodes = [...this.ids.values()].filter(n => n.generation === target.generation && n.x >= target.x);
+
+    nodes.forEach(n => n.x += diffX);
+  }
+
+  updatePosition() {
+    const root = this.getRoot();
     const generation = [...this.ids.values()].reduce((max, n) => max.generation < n.generation ? n : max, root).generation;
 
-    console.log(`Generation: ${generation + 1}`);
+    // console.log(`Generation: ${generation + 1}`);
     for (var g = 0; g <= generation; g++) {
       const nodes = [...this.ids.values()].filter(n => n.generation === g).toSorted((a, b) => a.getPath().localeCompare(b.getPath()));
 
       nodes.forEach((n, ix) => n.x = ix * 2);
     }
+    const relations = this.ids.values()
+      .filter(n => 'f' == n.gender)
+      .flatMap(f => f.partners)
+      .filter(p => p.children.length);
+
+    [...relations].toSorted((a, b) => {
+      const byGeneration = b.male.generation - a.male.generation;
+
+      if (byGeneration !== 0) {
+        return byGeneration;
+      }
+      return a.male.getPath().localeCompare(b.male.getPath());
+    }).forEach(p => {
+      // console.log(`Relation: ${p.male.id}_${p.female.id}`);
+      const { target, deviation } = p.detectDeviation();
+      if (target) {
+        // console.log(`detectDeviation: ${target} deviation: ${deviation}`);
+        this.shiftPosition(target, deviation);
+      }
+    });
   }
 
   generateActors(text) {
@@ -134,6 +163,7 @@ export class Genotxt {
       }
     });
     this.updateGeneration();
+    this.updatePosition();
   }
 
   fillSvg(svg) {

@@ -96,10 +96,42 @@ export class GenotxtPair {
     });
     path.setAttribute('d', d.join(' '));
     path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'lightgrey')
+    path.setAttribute('stroke', 'black');
     path.setAttribute('stroke-width', Param.STROKE_WIDTH);
+    path.setAttribute('class', 'relationship');
     group.appendChild(path);
     return group;
+  }
+
+  detectDeviation() {
+    const center = (this.male.x + this.female.x) / 2;
+
+    if (this.children.length === 0) {
+      return {};
+    }
+    if (this.children.length === 1) {
+      const target = this.children[0];
+      const deviation = center - target.x;
+
+      if (0 < deviation) {
+        // console.log(`detect: ${target} deviation: ${deviation}`);
+        return { target, deviation };
+      }
+      if (deviation < 0) {
+        // console.log(`detect: ${target} deviation: ${deviation}`);
+        return { target: this.female, deviation: -deviation };
+      }
+      return {};
+    }
+    const first = this.children[0];
+    const last = this.children[this.children.length - 1];
+    const centerOfChildren = (first.x + last.x) / 2;
+    const deviation = center - centerOfChildren;
+
+    if (deviation < 0) {
+      return { target: this.male, deviation: -deviation };
+    }
+    return {};
   }
 
   toString() {

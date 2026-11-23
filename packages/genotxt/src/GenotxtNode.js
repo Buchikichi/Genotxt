@@ -55,7 +55,7 @@ export class GenotxtNode {
       const text = this.doc.createElementNS(Param.SVG_NS, 'text');
 
       text.textContent = this.info.name;
-      // text.textContent = this.info.name + `  (${this.getPath()})`;
+      // text.textContent = this.info.name + `(${this.getPath()})`;
       text.setAttribute('x', 0);
       text.setAttribute('y', 50 + 20);
       text.setAttribute('font-size', Param.FONT_SIZE);
@@ -77,9 +77,6 @@ export class GenotxtNode {
   updateOrder(order = 10) {
     this.order = order;
     this.partners.forEach(p => p.updateOrder(order));
-  }
-
-  updatePos(pos = null, sourceId = null) {
   }
 
   toString() {

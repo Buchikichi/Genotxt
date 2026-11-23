@@ -1,13 +1,15 @@
 # A very famous family in Japan
-f(ふね)
-x[ほげ]
-n[なみ]
-s(さざ)
-k[かつ]
-w(わか)
+f(船)
+x(はて)
+n[波]
+s(さざえ)
+k[かつを]
+w(若布)
 tm/たま/
-m[マス]
-t[たら]
+m[鱒]
+t[鱈]
+h(花)
 s_m:t
 n_f:s,k,w,tm
-x_f
+x_n:z
+k_h:b,c,d,e
