@@ -8,6 +8,7 @@ export class Genotxt {
   constructor(doc) {
     this.doc = doc;
     this.ids = new Map();
+    this.errors = [];
   }
 
   getNode(id, type = '<') {
@@ -74,8 +75,8 @@ export class Genotxt {
     const female = roots.filter(n => 'f' == n.gender);
 
     if (1 < male.length && 1 < female.length) {
-      console.warn(`There are male ${male} roots.`);
-      console.warn(`There are female ${female} roots.`);
+      // console.warn(`There are male ${male} roots.`);
+      // console.warn(`There are female ${female} roots.`);
       return null;
     }
     return male.length == 1 ? male[0] : female[0];
@@ -85,12 +86,14 @@ export class Genotxt {
     const root = this.getRoot();
 
     if (root === null) {
-      console.warn('No root node found.');
-      return;
+      // console.warn('No root node found.');
+      this.errors.push('Only one bloodline connection is allowed.');
+      return false;
     }
     // console.log(`Root: ${root}`);
     root.updateGeneration();
     root.updateOrder();
+    return true;
   }
 
   shiftPosition(target, diffX) {
@@ -162,8 +165,25 @@ export class Genotxt {
         });
       }
     });
-    this.updateGeneration();
+    if(!this.updateGeneration()) {
+      return;
+    }
     this.updatePosition();
+  }
+
+  createErrors(svg) {
+    this.errors.forEach((e, ix) => {
+      const text = this.doc.createElementNS(Param.SVG_NS, 'text');
+
+      text.textContent = e;
+      text.setAttribute('x', 0);
+      text.setAttribute('y', Param.FONT_SIZE + ix * Param.FONT_SIZE * 1.5);
+      text.setAttribute('font-size', Param.FONT_SIZE);
+      text.setAttribute('text-anchor', 'left');
+      text.setAttribute('dominant-baseline', 'central');
+      text.setAttribute('class', 'error');
+      svg.appendChild(text)
+    });
   }
 
   fillSvg(svg) {
@@ -206,6 +226,7 @@ export class Genotxt {
 
     this.generateActors(text);
     this.fillSvg(svg);
+    this.createErrors(svg);
     view.replaceChildren(svg);
     // this.addBgToText(svg);
     return svg;

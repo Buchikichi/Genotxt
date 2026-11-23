@@ -22,9 +22,18 @@ textarea {
   width: 100%;
   height: auto;
 }
+
+/* Style for SVG elements */
 path.relationship {
   stroke: lightgrey;
 }
 path.relationship:hover {
-  stroke: blue;
+  stroke: lightblue;
+}
+text.error {
+  fill: red;
+  font-size: 1.5em;
+}
+text.name {
+  paint-order: stroke fill;
 }

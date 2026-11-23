@@ -13,6 +13,7 @@ export class GenotxtNode {
     this.partners = [];
     this.parnerNumber = null;
     this.order = null;
+    this.x = 0;
   }
 
   get y() {
@@ -59,8 +60,14 @@ export class GenotxtNode {
       text.setAttribute('x', 0);
       text.setAttribute('y', 50 + 20);
       text.setAttribute('font-size', Param.FONT_SIZE);
+      // text.setAttribute('font-weight', 'bold');
       text.setAttribute('text-anchor', 'middle');
       text.setAttribute('dominant-baseline', 'central');
+      text.setAttribute('stroke', 'white');
+      text.setAttribute('stroke-width', '8');
+      text.setAttribute('stroke-linejoin', 'round');
+      text.setAttribute('stroke-opacity', '0.6');
+      text.setAttribute('class', 'name');
       group.appendChild(text);
     }
   }
