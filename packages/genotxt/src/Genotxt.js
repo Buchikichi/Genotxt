@@ -97,9 +97,9 @@ export class Genotxt {
   }
 
   shiftPosition(target, diffX) {
-    const nodes = [...this.ids.values()].filter(n => n.generation === target.generation && n.x >= target.x);
+    const nodes = [...this.ids.values()].filter(n => n.generation === target.generation && n.pos >= target.pos);
 
-    nodes.forEach(n => n.x += diffX);
+    nodes.forEach(n => n.pos += diffX);
   }
 
   updatePosition() {
@@ -110,7 +110,7 @@ export class Genotxt {
     for (var g = 0; g <= generation; g++) {
       const nodes = [...this.ids.values()].filter(n => n.generation === g).toSorted((a, b) => a.getPath().localeCompare(b.getPath()));
 
-      nodes.forEach((n, ix) => n.x = ix * 2);
+      nodes.forEach((n, ix) => n.pos = ix * 2);
     }
     const relations = this.ids.values()
       .filter(n => 'f' == n.gender)

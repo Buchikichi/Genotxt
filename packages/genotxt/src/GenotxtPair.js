@@ -66,33 +66,45 @@ export class GenotxtPair {
     const group = this.female.createGroup();
     const path = this.female.doc.createElementNS(Param.SVG_NS, 'path');
     const d = [];
-    const y = this.female.radius;
-    const v = Param.GRID_HALF / 2;
-    const h = (this.male.x - this.female.x) * Param.GRID_WIDTH;
+    const bottomOfParents = this.female.radius;
+    const v = Param.GRID_WIDTH - Param.GRID_HALF / 2;
+    const h = this.male.x - this.female.x;
 
-    d.push(`M 0 ${y}`);
+    // Relationship of male and female
+    d.push(`M 0 ${bottomOfParents}`);
     d.push(`v ${v}`);
     d.push(`h ${h}`);
     d.push(`v ${-v}`);
+    // Relationship of parents and children
     if (1 < this.children.length) {
       const first = this.children[0];
       const last = this.children[this.children.length - 1];
-      const x1 = (first.x - this.female.x) * Param.GRID_WIDTH;
-      const y1 = this.female.radius + Param.GRID_WIDTH - Param.GRID_HALF / 2;
-      const h1 = (last.x - first.x) * Param.GRID_WIDTH;
+      const x1 = first.x - this.female.x;
+      const y1 = first.top - this.female.y - v;
+      const h1 = last.x - first.x;
       const h2 = -h1 / 2;
 
       d.push(`M ${x1} ${y1}`);
       d.push(`h ${h1}`);
       d.push(`m ${h2} 0`);
-      d.push(`v ${-v}`);
     }
+    if (0 < this.children.length) {
+      const first = this.children[0];
+      const last = this.children[this.children.length - 1];
+      const center = (first.x + last.x) / 2 - this.female.x;
+      const centerY = first.top - this.female.y - v;
+      const remainV = first.top - this.female.bottom - v * 2;
+
+      d.push(`M ${center} ${centerY}`);
+      d.push(`v ${-remainV}`);
+    }
+    // Each child's horn.
     this.children.forEach(c => {
-      const cx = (c.x - this.female.x) * Param.GRID_WIDTH;
-      const cy = this.female.radius + Param.GRID_WIDTH - Param.GRID_HALF / 2;
+      const cx = c.x - this.female.x;
+      const cy = c.top - this.female.y;
 
       d.push(`M ${cx} ${cy}`);
-      d.push(`v ${v}`);
+      d.push(`v ${-v}`);
     });
     path.setAttribute('d', d.join(' '));
     path.setAttribute('fill', 'none');
@@ -104,14 +116,14 @@ export class GenotxtPair {
   }
 
   detectDeviation() {
-    const center = (this.male.x + this.female.x) / 2;
+    const center = (this.male.pos + this.female.pos) / 2;
 
     if (this.children.length === 0) {
       return {};
     }
     if (this.children.length === 1) {
       const target = this.children[0];
-      const deviation = center - target.x;
+      const deviation = center - target.pos;
 
       if (0 < deviation) {
         // console.log(`detect: ${target} deviation: ${deviation}`);
@@ -125,7 +137,7 @@ export class GenotxtPair {
     }
     const first = this.children[0];
     const last = this.children[this.children.length - 1];
-    const centerOfChildren = (first.x + last.x) / 2;
+    const centerOfChildren = (first.pos + last.pos) / 2;
     const deviation = center - centerOfChildren;
 
     if (deviation < 0) {

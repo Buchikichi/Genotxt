@@ -13,11 +13,23 @@ export class GenotxtNode {
     this.partners = [];
     this.parnerNumber = null;
     this.order = null;
-    this.x = 0;
+    this.pos = 0;
+  }
+
+  get x() {
+    return Param.GRID_WIDTH + this.pos * Param.GRID_WIDTH;
   }
 
   get y() {
-    return Param.GRID_WIDTH + this.generation * Param.GRID_WIDTH * 2
+    return Param.GRID_WIDTH + this.generation * Param.GENERATION_HEIGHT;
+  }
+
+  get top() {
+    return this.y - this.radius;
+  }
+
+  get bottom() {
+    return this.y + this.radius;
   }
 
   getParents() {
@@ -33,9 +45,9 @@ export class GenotxtNode {
 
   createGroup() {
     const group = this.doc.createElementNS(Param.SVG_NS, 'g');
-    const x = Param.GRID_WIDTH + this.x * Param.GRID_WIDTH;
 
-    group.setAttribute('transform', `translate(${x}, ${this.y})`);
+    // The center of the shape.
+    group.setAttribute('transform', `translate(${this.x}, ${this.y})`);
     return group;
   }
 
@@ -58,7 +70,7 @@ export class GenotxtNode {
       text.textContent = this.info.name;
       // text.textContent = this.info.name + `(${this.getPath()})`;
       text.setAttribute('x', 0);
-      text.setAttribute('y', 50 + 20);
+      text.setAttribute('y', Param.GRID_HALF + Param.FONT_SIZE);
       text.setAttribute('font-size', Param.FONT_SIZE);
       // text.setAttribute('font-weight', 'bold');
       text.setAttribute('text-anchor', 'middle');
